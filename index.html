@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv='cache-control' content='no-cache'>
+  <meta http-equiv='expires' content='0'>
+  <meta http-equiv='pragma' content='no-cache'>
+  <title>Elecciones Parlamento Catalunya 2024 - Municipios - La Vanguardia</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet" type="text/css" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.css"
+    rel="stylesheet" type="text/css" />
+  <link href="./styles.css" rel="stylesheet" type="text/css" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
+  <script
+    src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js"></script>
+</head>
+
+<body>
+  <div class="map-wrapper">
+    <div id="map-container"></div>
+    <div id="custom-controls" class="map-overflow map-controls" style="visibility: visible;">
+      <!-- Removed hidden class and added inline style for visibility -->
+      <div class="map-overflow-wrap">
+        <div class="map-controls-hint">Selecciona un año y partido:</div>
+        <div class="map-controls-years">
+          <button class="map-control map-control--year" data-year="2024" onclick="updatePartyButtons(2024)">2024</button>
+          <button class="map-control map-control--year" data-year="2019" onclick="updatePartyButtons(2019)">2019</button>
+        </div>
+        <div class="map-controls-fill" id="party-controls"></div>
+      </div>
+    </div>
+    <!-- map zoom out -->
+    <div id="custom-buttons" class="map-overflow map-buttons hidden">
+      <button id="zoom-out" class="zoom-out" title="Zoom out">
+        <img src="img/spain.svg" alt="Zoom out">
+      </button>
+    </div>
+    <!-- end map zoom out -->
+
+    <!-- legend -->
+    <div id="legends" class="map-legends hidden">
+      <div class="map-legends-wrap">
+        <header id="legends-head" class="map-legends-header"></header>
+        <div id="legends-body" class="map-legends-body"></div>
+      </div>
+    </div>
+    <!-- end legend -->
+  </div>
+  <script src="./map.js"></script>
+  <script src="./partyColors.js"></script>
+  <script>
+    let map;
+    document.addEventListener('DOMContentLoaded', function () {
+      let mapLoaded = false;
+      mapboxgl.clearStorage();
+      const loadMap = () => {
+        const isMobile = window.innerWidth < 900;
+        map = new ElectionMap('pk.eyJ1IjoibGF1cjA1IiwiYSI6ImNqdnoyaTd3cDBrNjk0NW1xdGpyYWttenIifQ.K5bENvQciGvPOfnO9ERWzw', {
+          container: 'map-container',
+          style: 'mapbox://styles/fserrey/clvzejo7w014w01qu65sg9uau',
+          source: 'mapbox://fserrey.europeas2019_adm4?fresh=true',
+          sourceLayer: 'europeas2019_adm4',
+          center: [1.55, 41.82],
+          zoom: isMobile ? 7 : 8,
+          minZoom: isMobile ? 5.5 : 6,
+          initialSelect: 'winner2024',
+          // hash: true,
+          scrollZoom: true,
+          years: [2019, 2024],
+          parties: ['PP', 'PSOE', 'CS', 'ERC', 'PSC', 'JXCAT', 'PDECAT', 'ECP', 'CUP', 'COMUNS', 'SUMAR', 'VOX', 'ALIANZACAT', 'JUNTS', 'UP'],
+          partyColors: window._partyColors,
+        });
+        mapLoaded = true;
+      };
+      loadMap(); // Load the map immediately after defining
+
+      const partyData = {
+        2024: { 'Ganador': 'winner', 'PSC': 'PSC', 'ERC': 'ERC', 'Junts': 'JXCAT', 'Vox': 'VOX', 'Sumar': 'Sumar', 'CUP': 'CUP', 'CS': 'CS', 'PP': 'PP', 'Aliança Cat': 'ALIANZACAT' },
+        2019: { 'Ganador': 'winner', 'PSC': 'PSC', 'ERC': 'ERC', 'Junts': 'JXCAT', 'Vox': 'VOX', 'ECP': 'UP', 'CUP': 'CUP', 'CS': 'CS', 'PP': 'PP' }
+      };
+
+      window.updatePartyButtons = function (year) {
+        const container = document.getElementById('party-controls');
+        container.innerHTML = ''; // Clear existing buttons
+        
+        let winnerButton;
+        Object.entries(partyData[year]).forEach(([displayName, dataValue]) => {
+          let button = document.createElement('button');
+          button.className = 'map-control map-control--fill js-control';
+          button.dataset.fill = dataValue;
+          button.textContent = displayName;
+          if (year === 2019) {
+            button.onclick = function () { selectParty('winner', year); };
+          } else {
+            button.onclick = function () { selectParty(`winner${year}`, year); };
+          }
+          container.appendChild(button);
+          //button.onclick = function () { selectParty(dataValue, year); };
+          container.appendChild(button);
+        });
+
+        if (map && mapLoaded) {
+          map.currentYear = year.toString();
+          map.currentFill = 'winner';
+          map.setMapFill();
+        
+        }
+        
+        const yearBtns = document.querySelectorAll('.map-control--year');
+        yearBtns.forEach(btn => {
+          if (btn.dataset.year === year.toString()) {
+            btn.classList.add('bold-button'); // Add bold style to clicked button
+          } else {
+            btn.classList.remove('bold-button'); // Remove bold style from other buttons
+          }
+        });
+
+        if (caches && caches.keys()) {
+          caches.keys().then((keys) => {
+            Promise.all(keys.filter((k) => k === 'mapbox-tiles').map((k) => caches.delete(k)))
+              .then(() => { loadMap() })
+              .catch(() => { loadMap() });
+          })
+        } else loadMap();
+
+        // Optionally set an 'active' class on the first button
+        if (container.firstChild) {
+          container.firstChild.classList.add('is-active');
+        }
+      };
+
+      window.selectParty = function (party, year) {
+        console.log('selectParty called with party:', party, 'and year:', year);
+        console.log('Party selected:', party, 'for year:', year);
+        if (map) {
+          map.currentYear = year.toString();  
+          map.currentFill = party; 
+          map.setMapFill(); 
+        }
+      };
+
+      // Initialize with the default year
+      updatePartyButtons(2024);
+    });
+  </script>
+  </script>
+</body>
+
+</html>
