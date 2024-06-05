@@ -76,6 +76,11 @@
           partyColors: window._partyColors,
         });
         mapLoaded = true;
+      // Override the placeholder text after the map and geocoder are initialized
+      const geocoder = document.querySelector('.mapboxgl-ctrl-geocoder input');
+        if (geocoder) {
+          geocoder.placeholder = 'Busca tu calle';
+        }
       };
       loadMap(); // Load the map immediately after defining
 
