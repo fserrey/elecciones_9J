@@ -342,7 +342,7 @@ setLegendScales(years, parties) {
       language: 'es',
       country: 'es',
       types: 'region,place,locality,address',
-      placeholder: 'Busca tu ubicación',
+      placeholder: 'Busca tu municipio',
     }));
   }
 

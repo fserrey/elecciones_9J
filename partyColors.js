@@ -1,15 +1,15 @@
 window._partyColors = {
-    "UP": "#9370DB",
-    "SUMAR": "#e51c55",
-    "PSOE": "#e02020", // #DA291C
-    "PP": "#02a2dd", // #17589D
+    "UP": "#813f91",
+    "SUMAR": "#f491b2",
+    "PSOE": "#cf181e", // #DA291C
+    "PP": "#0096d3", // #17589D
     "VOX": "#7CBD2A",
-    "CS": "#ea8046",
-    "JXCAT": "#3FE1D2",
-    "JXCATJUNTS": "#3FE1D2",
-    "JUNTSXCAT": "#3FE1D2",
-    "JUNTS": "#3FE1D2",
-    "ERC": "#FFB232",
+    "CS": "#e95c0c",
+    "JXCAT": "#04aca4",
+    "JXCATJUNTS": "#04aca4",
+    "JUNTSXCAT": "#04aca4",
+    "JUNTS": "#04aca4",
+    "ERC": "#ffdc04",
     "CUP": "#FEED14",
     "PAR": "#fea000",
     "NA+": "#1c699C",
@@ -33,6 +33,7 @@ window._partyColors = {
     "ECP-PEC": "#9370DB",
     "PDECAT":"#006EB1",
     "ALIANZACAT":"#174F82",
+    "AHORAREPUBLICAS":"#ffdc04",
     
     "PCTE": "#E3061A",
     "EXISTE": "#007F51",
