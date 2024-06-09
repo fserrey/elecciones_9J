@@ -63,8 +63,8 @@
         map = new ElectionMap('pk.eyJ1IjoibGF1cjA1IiwiYSI6ImNqdnoyaTd3cDBrNjk0NW1xdGpyYWttenIifQ.K5bENvQciGvPOfnO9ERWzw', {
           container: 'map-container',
           style: 'mapbox://styles/laur05/cli3c8vra00kw01qu7qf5d8v7',
-          source: 'mapbox://fserrey.europeas2019_adm7?fresh=true',
-          sourceLayer: 'europeas2019_adm7',
+          source: 'mapbox://laur05.europeas2024_adm7?fresh=true',
+          sourceLayer: 'europeas2024_adm7',
           center: [-1.8, 40],
           zoom: isMobile ? 5. : 6,
           minZoom: isMobile ? 4 : 6,
@@ -72,7 +72,7 @@
           // hash: true,
           scrollZoom: true,
           years: [2019, 2024],
-          parties: ['PP', 'PSOE', 'CS', 'JXCAT','UP','CUP','COMUNS', 'SUMAR', 'VOX','ERC'],
+          parties: ['PP', 'PSOE', 'CS', 'JXCAT','UP','CUP','COMUNS', 'SUMAR', 'VOX','ERC','ADÑ', 'AHORAREPUBLICAS', 'ALTER', 'ANDALUCISTAS', 'AxSÍ', 'CCA', 'CEUS', 'CEX', 'CPE', 'CREE', 'CRT', 'CV-EC', 'CXE', 'CS', 'CxG', 'DV', 'EH-BILDU', 'ELAK', 'ELPI', 'EQUO', 'ERC', 'ESCAÑOSENBLANCO', 'EU', 'EXISTE', 'EXTREMEÑOS', 'FAC', 'FEJONS', 'FNC', 'FO', 'FORO', 'FUTURO', 'GLG', 'I.Fem', 'IE', 'IF', 'IGRE', 'IU', 'IZQESP', 'IZQP', 'JUEX', 'JXCAT', 'LFV', 'MIEL', 'PACMA', 'PCPE', 'PCTE', 'PCTG', 'PFAC', 'PH', 'PIRATES', 'PMR', 'PNACIONAL', 'PNV', 'PP', 'PSOE', 'RECORTES CERO-GV', 'RECORTES0', 'SAE', 'SAF', 'SAIn', 'SUMAR', 'THELEFT', 'UNIDOSSI', 'UP', 'UPyD', 'VOLT'],
           partyColors: window._partyColors,
         });
         mapLoaded = true;
@@ -85,8 +85,8 @@
       loadMap(); // Load the map immediately after defining
 
       const partyData = {
-        2024: { 'Ganador': 'winner', 'PSOE': 'PSOE', 'PP': 'PP','Sumar': 'Sumar', 'Podemos':'UP','Vox': 'VOX'},
-        2019: { 'Ganador': 'winner', 'PSOE': 'PSOE', 'PP': 'PP', 'Podemos':'UP', 'Vox': 'VOX' }
+        2024: { 'Ganador': 'winner', 'PSOE': 'PSOE', 'PP': 'PP','Vox': 'VOX','PODEMOS':'UP','SUMAR': 'SUMAR','VOX': 'VOX', 'ALVISE':'SAF','ARA REPÚBLIQUES':'ERC' },
+        2019: { 'Ganador': 'winner', 'PSOE': 'PSOE', 'PP': 'PP', 'PODEMOS':'UP', 'VOX': 'VOX' }
       };
 
       window.updatePartyButtons = function (year) {

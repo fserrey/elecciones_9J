@@ -34,6 +34,7 @@ window._partyColors = {
     "PDECAT":"#006EB1",
     "ALIANZACAT":"#174F82",
     "AHORAREPUBLICAS":"#ffdc04",
+    "SAF":"#785a46",
     
     "PCTE": "#E3061A",
     "EXISTE": "#007F51",
