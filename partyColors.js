@@ -35,6 +35,7 @@ window._partyColors = {
     "ALIANZACAT":"#174F82",
     "AHORAREPUBLICAS":"#ffdc04",
     "SAF":"#785a46",
+    "CEUS":"#043cb9",
     
     "PCTE": "#E3061A",
     "EXISTE": "#007F51",
