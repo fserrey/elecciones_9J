@@ -68,6 +68,7 @@ class ElectionMap {
       this.setLayerOptions(years, parties);
   
       this.map.on('load', () => {
+        this.addBackgroundLayer();
         this.addLayers();
         this.addControls();
         this.addButtonsListeners();
@@ -283,14 +284,15 @@ class ElectionMap {
             "case",
             ["has", `${prefix}_${party.toUpperCase()}`],
             this.partyColors[party.toUpperCase()],
-            "#F7F7F7"
+            "#B0B0B0"
           ];
         });
         this.fillLayerFillColor[`${party.toLowerCase()}diff`] = [
           'interpolate',
           ['linear', 1],
           ['get', `diff_${party.toUpperCase()}`],
-          ...this.colorScales.PiGY
+          ...this.colorScales.PiGY,
+          "#B0B0B0"
         ];
       });
   
@@ -300,11 +302,21 @@ class ElectionMap {
         this.fillLayerFillColor[`bloques${year}`] = ['interpolate', ['linear', 1], ['get', `${prefix}_block`], ...this.colorScales.RdBu];
       });
     }
+    addBackgroundLayer() {
+      // Add a background layer to fill gaps with grey color
+      this.map.addLayer({
+        id: 'background-layer',
+        type: 'background',
+        paint: {
+          'background-color': '#B0B0B0',
+        },
+      });
+    }
   
     addLayers() {
       // Add layer source
       this.map.addSource(this.sourceId, { type: 'vector', url: this.source });
-  
+    
       // Fill layer used to show results
       this.map.addLayer({
         id: this.fillLayerId,
@@ -320,8 +332,8 @@ class ElectionMap {
           'fill-opacity': this.fillLayerFillOpacity[this.initialSelect],
           'fill-outline-color': this.fillLayerFillColor[this.initialSelect],
         },
-      }, 'road-simple');
-  
+      });
+    
       // Line layer used to show hover effects
       this.map.addLayer({
         id: this.lineLayerId,
@@ -333,8 +345,8 @@ class ElectionMap {
           'line-width': ['case', ['boolean', ['feature-state', 'hover'], false], 2, 0],
         },
       });
-  
     }
+    
     
     addControls() {
       // Add navigation controls
