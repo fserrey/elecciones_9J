@@ -8,8 +8,8 @@ class ElectionMap {
   legendScales = {};
   legendLabels = {};
   colorScales = {
-    PiGY: [-50, '#8e0152', -40, '#c51b7d', -30, '#de77ae', -20, '#f1b6da', -10, '#fde0ef', 0, '#f7f7f7', 10, '#e6f5d0', 20, '#b8e186', 30, '#7fbc41', 40, '#4d9221', 50, '#276419'],
-    RdBu: [-50, '#67001f', -40, '#b2182b', -30, '#d6604d', -20, '#f4a582', -10, '#fddbc7', 0, '#f7f7f7', 10, '#d1e5f0', 20, '#92c5de', 30, '#4393c3', 40, '#2166ac', 50, '#053061'],
+    PiGY:  [-50, '#8e0152', -40, '#c51b7d', -30, '#de77ae', -20, '#f1b6da', -10, '#fde0ef', 0, '#f7f7f7', 10, '#e6f5d0', 20, '#b8e186', 30, '#7fbc41', 40, '#4d9221', 50, '#276419'],
+    RdBu:  [-50, '#67001f', -40, '#b2182b', -30, '#d6604d', -20, '#f4a582', -10, '#fddbc7', 0, '#f7f7f7', 10, '#d1e5f0', 20, '#92c5de', 30, '#4393c3', 40, '#2166ac', 50, '#053061'],
   }
   fillLayerFillOpacity = {};
   fillLayerFilter = {};
@@ -33,7 +33,7 @@ class ElectionMap {
     scrollZoom,
   }) {
     this.source = source;
-    this.sourceLayer = sourceLayer || 'europeas2024_adm7';
+    this.sourceLayer = sourceLayer;
     this.initialSelect = initialSelect || '2024winner';
     this.initialCenter = [...center];
     this.initialZoom = zoom;
@@ -68,29 +68,26 @@ class ElectionMap {
     this.setLayerOptions(years, parties);
 
     this.map.on('load', () => {
-      console.log('Map loaded');
       this.addLayers();
       this.addControls();
       this.addButtonsListeners();
       this.showButtons();
       this.setLegend(this.initialSelect);
-    });
 
+    });
     this.map.on('mousemove', this.fillLayerId, (e) => {
       this.updateHoverState(e);
       this.updatePopup(e);
     });
-
     this.map.on('mouseleave', this.fillLayerId, (e) => {
       this.unhoverSection(e);
     });
-
     this.map.on('click', this.fillLayerId, (e) => {
       this.onMouseClick(e);
     });
-    console.log('partyColors:', this.partyColors); // Add this line
   }
 
+  
   getYearKey(i) {
     return i === 0 ? 'last' : 'curr';
   }
@@ -101,7 +98,6 @@ class ElectionMap {
       const prefix = this.getYearKey(i);
       this.fillLayerFillOpacity[`winner${year}`] = ['interpolate', ["linear", 1], ["get", `${prefix}_winner1_val`], 0, 0, 50, 0.9];
       parties.forEach((party) => {
-        console.log(`Setting fill opacity for ${party} in ${year}`);
         this.fillLayerFillOpacity[`${party.toLowerCase()}${year}`] = ['interpolate', ["linear", 1], ["get", `${prefix}_${party.toUpperCase()}`], 9.99, 0.05, 10, 0.2, 19.99, 0.2, 20, 0.4, 29.99, 0.4, 30, 0.6, 39.99, 0.6, 40, 0.8];
       });
     });
@@ -117,96 +113,157 @@ class ElectionMap {
       this.fillLayerFilter[`bloques${year}`] = ['has', `${prefix}_block`];
     });
     parties.forEach((party) => {
-      console.log(`Setting filter for ${party}`);
       this.fillLayerFilter[`${party.toLowerCase()}diff`] = ['has', `diff_${party.toUpperCase()}`];
     });
   }
 
+//  setLegendLabels(years, parties) {
+//    this.legendLabels = {
+//      winnerdiff: 'Partido ganador',
+//      bloquesdiff: 'Cambio en porcentaje de voto a bloque',
+//    };
+//    years.forEach((year) => {
+//      this.legendLabels[`bloques${year}`] = 'Porcentaje de voto a bloque';
+//      parties.forEach((party) => {
+//        this.legendLabels[`${party.toLowerCase()}${year}`] = 'Porcentaje de voto';
+//        this.legendLabels[`${party.toLowerCase()}diff`] = 'Cambio en porcentaje de voto';
+//      });
+//    });
+//  }
   setLegendLabels(years, parties) {
     this.legendLabels = {};
     years.forEach((year) => {
+      //this.legendLabels[`winner${year}`] = 'Ganador del año '; // + year;
       this.legendLabels[`bloques${year}`] = 'Porcentaje de voto a bloque';
       parties.forEach((party) => {
         let partyKey = party.toLowerCase();
         this.legendLabels[`${partyKey}${year}`] = `Porcentaje de voto`;
+        //this.legendLabels[`${partyKey}${year}`] = `Porcentaje de voto en ${year}`;
         this.legendLabels[`${partyKey}diff${year}`] = `Cambio en porcentaje de voto para ${party}`;
       });
     });
   }
 
-  setLegendScales(years, parties) {
-    this.legendScales = {
-      winnerdiff: [
-        {color: "#7fbc41", label: 'Mismo partido',},
-        {color: "#d6604d", label: 'Diferente partido',},
-      ],
-      bloquesdiff: [
-        {color: this.colorScales.RdBu[1], label: '+50 izq'},
-        {color: this.colorScales.RdBu[5], label: '+30'},
-        {color: this.colorScales.RdBu[9], label: '+10'},
-        {color: this.colorScales.RdBu[13], label: '+10'},
-        {color: this.colorScales.RdBu[17], label: '+30'},
-        {color: this.colorScales.RdBu[21], label: '+50 der'},
-      ],
-    };
+//   setLegendScales(years, parties) {
+//     this.legendScales = {
+//       winnerdiff: [
+//         {color: "#7fbc41", label: 'Mismo partido',},
+//         {color: "#d6604d", label: 'Diferente partido',},
+//       ],
+//       bloquesdiff: [
+//         {color: this.colorScales.RdBu[1], label: '+50 izq'},
+//         {color: this.colorScales.RdBu[5], label: '+30'},
+//         {color: this.colorScales.RdBu[9], label: '+10'},
+//         {color: this.colorScales.RdBu[13], label: '+10'},
+//         {color: this.colorScales.RdBu[17], label: '+30'},
+//         {color: this.colorScales.RdBu[21], label: '+50 der'},
+//       ],
+//     };
+//     parties.forEach((party) => {
+//       this.legendScales[`${party.toLowerCase()}diff`] = [
+//         {color: this.colorScales.PiGY[1], label: '-50',},
+//         {color: this.colorScales.PiGY[5], label: '-30',},
+//         {color: this.colorScales.PiGY[9], label: '-10',},
+//         {color: this.colorScales.PiGY[13], label: '+10',},
+//         {color: this.colorScales.PiGY[17], label: '+30',},
+//         {color: this.colorScales.PiGY[21], label: '+50',},
+//       ];
+//       years.forEach((year) => {
+//         this.legendScales[`${party.toLowerCase()}${year}`] = [
+//           {color: `${this.partyColors[party.toUpperCase()]}0d`, label: '0-10',},
+//           {color: `${this.partyColors[party.toUpperCase()]}33`, label: '10-20',},
+//           {color: `${this.partyColors[party.toUpperCase()]}66`, label: '20-30',},
+//           {color: `${this.partyColors[party.toUpperCase()]}99`, label: '30-40',},
+//           {color: `${this.partyColors[party.toUpperCase()]}cc`, label: '+40',},
+//         ];
+//       });
+//     });
+// 
+//     years.forEach((year) => {
+//       this.legendScales[`bloques${year}`] = [
+//         {color: this.colorScales.RdBu[1], label: '+50 izq',},
+//         {color: this.colorScales.RdBu[5], label: '+30',},
+//         {color: this.colorScales.RdBu[9], label: '+10',},
+//         {color: this.colorScales.RdBu[13], label: '+10',},
+//         {color: this.colorScales.RdBu[17], label: '+30',},
+//         {color: this.colorScales.RdBu[21], label: '+50 der',},
+//       ];
+//     });
+//   }
+setLegendScales(years, parties) {
+  this.legendScales = {
+    winnerdiff: [
+      {color: "#7fbc41", label: 'Mismo partido',},
+      {color: "#d6604d", label: 'Diferente partido',},
+    ],
+    bloquesdiff: [
+      {color: this.colorScales.RdBu[1], label: '+50 izq'},
+      {color: this.colorScales.RdBu[5], label: '+30'},
+      {color: this.colorScales.RdBu[9], label: '+10'},
+      {color: this.colorScales.RdBu[13], label: '+10'},
+      {color: this.colorScales.RdBu[17], label: '+30'},
+      {color: this.colorScales.RdBu[21], label: '+50 der'},
+    ],
+  };
 
-    parties.forEach((party) => {
-      let scales;
-      if (party.toLowerCase() === 'alianzacat') {
-        scales = [
-          {color: this.colorScales.PiGY[1], label: '-30',},
-          {color: this.colorScales.PiGY[5], label: '-20',},
-          {color: this.colorScales.PiGY[9], label: '-10',},
-          {color: this.colorScales.PiGY[13], label: '+10',},
-          {color: this.colorScales.PiGY[17], label: '+20',},
-          {color: this.colorScales.PiGY[21], label: '+30',},  // This will be the darkest color
-        ];
-      } else {
-        scales = [
-          {color: this.colorScales.PiGY[1], label: '-50',},
-          {color: this.colorScales.PiGY[5], label: '-30',},
-          {color: this.colorScales.PiGY[9], label: '-10',},
-          {color: this.colorScales.PiGY[13], label: '+10',},
-          {color: this.colorScales.PiGY[17], label: '+30',},
-          {color: this.colorScales.PiGY[21], label: '+50',},
-        ];
-      }
+  parties.forEach((party) => {
+    let scales;
+    if (party.toLowerCase() === 'alianzacat') {
+      scales = [
+        {color: this.colorScales.PiGY[1], label: '-30',},
+        {color: this.colorScales.PiGY[5], label: '-20',},
+        {color: this.colorScales.PiGY[9], label: '-10',},
+        {color: this.colorScales.PiGY[13], label: '+10',},
+        {color: this.colorScales.PiGY[17], label: '+20',},
+        {color: this.colorScales.PiGY[21], label: '+30',},  // This will be the darkest color
+      ];
+    } else {
+      scales = [
+        {color: this.colorScales.PiGY[1], label: '-50',},
+        {color: this.colorScales.PiGY[5], label: '-30',},
+        {color: this.colorScales.PiGY[9], label: '-10',},
+        {color: this.colorScales.PiGY[13], label: '+10',},
+        {color: this.colorScales.PiGY[17], label: '+30',},
+        {color: this.colorScales.PiGY[21], label: '+50',},
+      ];
+    }
 
-      this.legendScales[`${party.toLowerCase()}diff`] = scales;
-
-      years.forEach((year) => {
-        let yearScales;
-        if (party.toLowerCase() === 'alianzacat') {
-          yearScales = [
-            {color: `${this.partyColors[party.toUpperCase()]}0d`, label: '0-10',},
-            {color: `${this.partyColors[party.toUpperCase()]}33`, label: '10-20',},
-            {color: `${this.partyColors[party.toUpperCase()]}66`, label: '20-30',},
-            {color: `${this.partyColors[party.toUpperCase()]}99`, label: '+30',},  
-          ];
-        } else {
-          yearScales = [
-            {color: `${this.partyColors[party.toUpperCase()]}0d`, label: '0-10',},
-            {color: `${this.partyColors[party.toUpperCase()]}33`, label: '10-20',},
-            {color: `${this.partyColors[party.toUpperCase()]}66`, label: '20-30',},
-            {color: `${this.partyColors[party.toUpperCase()]}99`, label: '30-40',},
-            {color: `${this.partyColors[party.toUpperCase()]}cc`, label: '+40',},
-          ];
-        }
-        this.legendScales[`${party.toLowerCase()}${year}`] = yearScales;
-      });
-    });
+    this.legendScales[`${party.toLowerCase()}diff`] = scales;
 
     years.forEach((year) => {
-      this.legendScales[`bloques${year}`] = [
-        {color: this.colorScales.RdBu[1], label: '+50 izq',},
-        {color: this.colorScales.RdBu[5], label: '+30',},
-        {color: this.colorScales.RdBu[9], label: '+10',},
-        {color: this.colorScales.RdBu[13], label: '+10',},
-        {color: this.colorScales.RdBu[17], label: '+30',},
-        {color: this.colorScales.RdBu[21], label: '+50 der',},
-      ];
+      let yearScales;
+      if (party.toLowerCase() === 'alianzacat') {
+        yearScales = [
+          {color: `${this.partyColors[party.toUpperCase()]}0d`, label: '0-10',},
+          {color: `${this.partyColors[party.toUpperCase()]}33`, label: '10-20',},
+          {color: `${this.partyColors[party.toUpperCase()]}66`, label: '20-30',},
+          {color: `${this.partyColors[party.toUpperCase()]}99`, label: '+30',},  
+        ];
+      } else {
+        yearScales = [
+          {color: `${this.partyColors[party.toUpperCase()]}0d`, label: '0-10',},
+          {color: `${this.partyColors[party.toUpperCase()]}33`, label: '10-20',},
+          {color: `${this.partyColors[party.toUpperCase()]}66`, label: '20-30',},
+          {color: `${this.partyColors[party.toUpperCase()]}99`, label: '30-40',},
+          {color: `${this.partyColors[party.toUpperCase()]}cc`, label: '+40',},
+        ];
+      }
+      this.legendScales[`${party.toLowerCase()}${year}`] = yearScales;
     });
-  }
+  });
+
+  years.forEach((year) => {
+    this.legendScales[`bloques${year}`] = [
+      {color: this.colorScales.RdBu[1], label: '+50 izq',},
+      {color: this.colorScales.RdBu[5], label: '+30',},
+      {color: this.colorScales.RdBu[9], label: '+10',},
+      {color: this.colorScales.RdBu[13], label: '+10',},
+      {color: this.colorScales.RdBu[17], label: '+30',},
+      {color: this.colorScales.RdBu[21], label: '+50 der',},
+    ];
+  });
+}
+
 
   setLayerOptions(years, parties) {
     this.fillLayerFillColor = {
@@ -217,21 +274,18 @@ class ElectionMap {
     parties.forEach((party) => {
       years.forEach((year, i) => {
         const prefix = this.getYearKey(i);
-        console.log(`Setting fill color for ${party} in ${year}`); // Add this line
-
         this.fillLayerFillColor[`${party.toLowerCase()}${year}`] = [
           "case",
           ["has", `${prefix}_${party.toUpperCase()}`],
           this.partyColors[party.toUpperCase()],
-          "#B0B0B0"
+          "#F7F7F7"
         ];
       });
       this.fillLayerFillColor[`${party.toLowerCase()}diff`] = [
         'interpolate',
         ['linear', 1],
         ['get', `diff_${party.toUpperCase()}`],
-        ...this.colorScales.PiGY,
-        "#B0B0B0"
+        ...this.colorScales.PiGY
       ];
     });
 
@@ -244,18 +298,7 @@ class ElectionMap {
 
   addLayers() {
     // Add layer source
-    console.log('Adding source:', this.sourceId);
     this.map.addSource(this.sourceId, { type: 'vector', url: this.source });
-    
-    // Log available layers in the source
-    this.map.on('sourcedata', (e) => {
-      if (e.sourceId === this.sourceId && e.isSourceLoaded) {
-        const source = this.map.getSource(this.sourceId);
-        if (source && source.vectorLayerIds) {
-          console.log('Available layers in the source:', source.vectorLayerIds);
-        }
-      }
-    });
 
     // Fill layer used to show results
     this.map.addLayer({
@@ -272,7 +315,7 @@ class ElectionMap {
         'fill-opacity': this.fillLayerFillOpacity[this.initialSelect],
         'fill-outline-color': this.fillLayerFillColor[this.initialSelect],
       },
-    });
+    }, 'road-simple');
 
     // Line layer used to show hover effects
     this.map.addLayer({
@@ -285,12 +328,13 @@ class ElectionMap {
         'line-width': ['case', ['boolean', ['feature-state', 'hover'], false], 2, 0],
       },
     });
-  }
 
+  }
+  
   addControls() {
     // Add navigation controls
     this.map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
-
+  
     // Add search box
     this.map.addControl(new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
@@ -318,7 +362,7 @@ class ElectionMap {
         center: this.initialCenter,
         zoom: this.initialZoom,
         duration: 1600,
-      });
+        });
     });
   }
 
@@ -486,7 +530,7 @@ class ElectionMap {
       console.log("No legend for winners.");
       return;
     }
-
+//
     if (!this.legendLabels[scaleName]) {
       // if clicked legend it's empty, hide legends box
       console.log("No legend labels found for:", scaleName);
@@ -494,11 +538,12 @@ class ElectionMap {
       return;
     }
 
+  
     document.getElementById('legends').classList.remove('hidden');
     document.getElementById('legends-head').innerHTML = this.legendLabels[scaleName];
     const container = document.getElementById('legends-body');
     container.innerHTML = '';
-
+  
     this.legendScales[scaleName].filter((d) => !d.hideLegend).forEach((l) => {
       container.innerHTML += `
         <div class="map-legend">
@@ -507,19 +552,15 @@ class ElectionMap {
         </div>
       `;
     });
-  }
+  };
 
   setMapFill() {
+  //
     const fillName = `${this.currentFill.toLowerCase()}${this.currentYear}`;
     if (!this.map.getLayer(this.fillLayerId)) {
       console.log(`Layer ${this.fillLayerId} does not exist yet.`);
       return; // Stop the function if the layer isn't found
-    }
-    console.log(`Setting map fill: ${fillName}`); // Add this line
-    console.log('Fill Filter:', this.fillLayerFilter[fillName]); // Add this line
-    console.log('Fill Color:', this.fillLayerFillColor[fillName]); // Add this line
-    console.log('Fill Opacity:', this.fillLayerFillOpacity[fillName]); // Add this line
-
+  }
     this.map.setFilter(this.fillLayerId, this.fillLayerFilter[fillName]);
     this.map.setPaintProperty(this.fillLayerId, 'fill-color', this.fillLayerFillColor[fillName]);
     this.map.setPaintProperty(this.fillLayerId, 'fill-opacity', this.fillLayerFillOpacity[fillName]);
@@ -532,12 +573,12 @@ class ElectionMap {
   onControlButtonClick(e) {
     // If clicked button is currently active don't do anything
     if (e.target.classList.contains('is-active')) return;
-
+  
     // Remove other buttons class is-active
     document.querySelectorAll('.js-control').forEach((control) => {
       control.classList.remove('is-active');
     });
-
+  
     // Apply change
     this.currentFill = e.target.dataset.fill;
     this.setMapFill();
@@ -549,7 +590,7 @@ class ElectionMap {
   onYearButtonClick(e) {
     // If clicked button is currently active don't do anything
     if (e.target.classList.contains('is-active')) return;
-
+  
     // Remove other buttons class is-active
     document.querySelectorAll('.js-year').forEach((control) => {
       control.classList.remove('is-active');
