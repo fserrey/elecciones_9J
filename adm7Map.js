@@ -445,7 +445,7 @@ setLegendScales(years, parties) {
         <thead>
           <tr>
             <th></th>
-            <th class="cr">2019</th>
+            <th class="cr">2021</th>
             <th class="cr">2024</th>
           </tr>
         </thead>
@@ -473,10 +473,10 @@ setLegendScales(years, parties) {
   popupResultsTable(p) {
     let results;
     let year;
-    if (this.currentYear === '2019') {
+    if (this.currentYear === '2021') {
       if (!p.last_results) return '';
       results = this.popupStrResultsToObj(p.last_results);
-      year = 2019;
+      year = 2021;
     } else {
       if (!p.curr_results) return '';
       results = this.popupStrResultsToObj(p.curr_results);
