@@ -85,6 +85,7 @@ class ElectionMap {
       this.map.on('click', this.fillLayerId, (e) => {
         this.onMouseClick(e);
       });
+      console.log('partyColors:', this.partyColors); // Add this line
     }
   
     
@@ -98,6 +99,7 @@ class ElectionMap {
         const prefix = this.getYearKey(i);
         this.fillLayerFillOpacity[`winner${year}`] = ['interpolate', ["linear", 1], ["get", `${prefix}_winner1_val`], 0, 0, 50, 0.9];
         parties.forEach((party) => {
+          console.log(`Setting fill opacity for ${party} in ${year}`);
           this.fillLayerFillOpacity[`${party.toLowerCase()}${year}`] = ['interpolate', ["linear", 1], ["get", `${prefix}_${party.toUpperCase()}`], 9.99, 0.05, 10, 0.2, 19.99, 0.2, 20, 0.4, 29.99, 0.4, 30, 0.6, 39.99, 0.6, 40, 0.8];
         });
       });
@@ -113,6 +115,7 @@ class ElectionMap {
         this.fillLayerFilter[`bloques${year}`] = ['has', `${prefix}_block`];
       });
       parties.forEach((party) => {
+        console.log(`Setting filter for ${party}`);
         this.fillLayerFilter[`${party.toLowerCase()}diff`] = ['has', `diff_${party.toUpperCase()}`];
       });
     }
@@ -274,6 +277,8 @@ class ElectionMap {
       parties.forEach((party) => {
         years.forEach((year, i) => {
           const prefix = this.getYearKey(i);
+          console.log(`Setting fill color for ${party} in ${year}`); // Add this line
+
           this.fillLayerFillColor[`${party.toLowerCase()}${year}`] = [
             "case",
             ["has", `${prefix}_${party.toUpperCase()}`],
@@ -561,6 +566,11 @@ class ElectionMap {
         console.log(`Layer ${this.fillLayerId} does not exist yet.`);
         return; // Stop the function if the layer isn't found
     }
+      console.log(`Setting map fill: ${fillName}`); // Add this line
+      console.log('Fill Filter:', this.fillLayerFilter[fillName]); // Add this line
+      console.log('Fill Color:', this.fillLayerFillColor[fillName]); // Add this line
+      console.log('Fill Opacity:', this.fillLayerFillOpacity[fillName]); // Add this line
+  
       this.map.setFilter(this.fillLayerId, this.fillLayerFilter[fillName]);
       this.map.setPaintProperty(this.fillLayerId, 'fill-color', this.fillLayerFillColor[fillName]);
       this.map.setPaintProperty(this.fillLayerId, 'fill-opacity', this.fillLayerFillOpacity[fillName]);

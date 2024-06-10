@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,11 +10,14 @@
   <meta http-equiv='pragma' content='no-cache'>
   <title>Elecciones Parlamento Europeo 2024 - Sección censal - La Vanguardia</title>
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js"></script>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet" type="text/css"/>
-  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js"></script>
-  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.css" rel="stylesheet" type="text/css"/>
-  <link href="./styles.css" rel="stylesheet" type="text/css"/>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css" rel="stylesheet" type="text/css" />
+  <script
+    src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.min.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v2.3.0/mapbox-gl-geocoder.css"
+    rel="stylesheet" type="text/css" />
+  <link href="./styles.css" rel="stylesheet" type="text/css" />
 </head>
+
 <body>
   <div class="map-wrapper">
     <div id="map-container"></div>
@@ -25,7 +29,7 @@
         <div class="map-controls-years">
           <button class="map-control map-control--year js-year is-active" data-year="2024">2024</button>
           <button class="map-control map-control--year js-year " data-year="2019">2019</button>
-          
+
           <!-- <button class="map-control map-control--year js-year" data-year="diff">Diff</button> -->
         </div>
         <div class="map-controls-fill">
@@ -33,12 +37,12 @@
           <button class="map-control map-control--fill js-control" data-fill="PSOE">PSOE</button>
           <button class="map-control map-control--fill js-control" data-fill="PP">PP</button>
 
-          <button class="map-control map-control--fill js-control" data-fill="VOX">VOX</button>          
+          <button class="map-control map-control--fill js-control" data-fill="VOX">VOX</button>
           <button class="map-control map-control--fill js-control" data-fill="UP">PODEMOS</button>
           <button class="map-control map-control--fill js-control" data-fill="SUMAR">SUMAR</button>
-          <button class="map-control map-control--fill js-control" data-fill="SAF">ALVISE</button>
-          
-          
+          <button class="map-control map-control--fill js-control" data-fill="SAF">SAF</button>
+
+
           <!--
           <button class="map-control map-control--fill js-control" data-fill="UP">Podemos</button>
           <button class="map-control map-control--fill js-control" data-fill="ERC">ARA REPÚBLIQUES</button>
@@ -78,17 +82,17 @@
       const isMobile = window.innerWidth < 900;
       const map = new ElectionMap('pk.eyJ1IjoibGF1cjA1IiwiYSI6ImNqdnoyaTd3cDBrNjk0NW1xdGpyYWttenIifQ.K5bENvQciGvPOfnO9ERWzw', {
         container: 'map-container',
-        style: 'mapbox://styles/laur05/cli3c8vra00kw01qu7qf5d8v7', 
-        source: 'mapbox://laur05.europeas2024_adm7?fresh=true',       
+        style: 'mapbox://styles/laur05/cli3c8vra00kw01qu7qf5d8v7',
+        source: 'mapbox://laur05.europeas2024_adm7?fresh=true',
         sourceLayer: 'europeas2024_adm7',
-        center: [-3.89, 40],
-        zoom: isMobile ? 5. : 6,
-        minZoom: isMobile ? 4 : 6,
+        center: [-3.89, 40.5],
+        zoom: isMobile ? 7 : 8,
+        minZoom: isMobile ? 6 : 7,
         initialSelect: 'winner2024',
         // hash: true,
         scrollZoom: true,
         years: [2019, 2024],
-        parties: ['PP', 'PSOE', 'CS', 'JXCAT','UP','CUP','COMUNS', 'SUMAR', 'VOX','ADÑ', 'AHORAREPUBLICAS', 'ALTER', 'ANDALUCISTAS', 'AxSÍ', 'CCA', 'CEUS', 'CEX', 'CPE', 'CREE', 'CRT', 'CV-EC', 'CXE', 'CS', 'CxG', 'DV', 'EH-BILDU', 'ELAK', 'ELPI', 'EQUO', 'ERC', 'ESCAÑOSENBLANCO', 'EU', 'EXISTE', 'EXTREMEÑOS', 'FAC', 'FEJONS', 'FNC', 'FO', 'FORO', 'FUTURO', 'GLG', 'I.Fem', 'IE', 'IF', 'IGRE', 'IU', 'IZQESP', 'IZQP', 'JUEX', 'JXCAT', 'LFV', 'MIEL', 'PACMA', 'PCPE', 'PCTE', 'PCTG', 'PFAC', 'PH', 'PIRATES', 'PMR', 'PNACIONAL', 'PNV', 'PP', 'PSOE', 'RECORTES CERO-GV', 'RECORTES0', 'SAE', 'SAF', 'SAIn', 'SUMAR', 'THELEFT', 'UNIDOSSI', 'UP', 'UPyD', 'VOLT'],
+        parties: ['PP', 'PSOE', 'SAF', 'ALVISE', 'CS', 'JXCAT', 'UP', 'CUP', 'COMUNS', 'SUMAR', 'VOX', 'ADÑ', 'AHORAREPUBLICAS', 'ALTER', 'ANDALUCISTAS', 'AxSÍ', 'CCA', 'CEUS', 'CEX', 'CPE', 'CREE', 'CRT', 'CV-EC', 'CXE', 'CS', 'CxG', 'DV', 'EH-BILDU', 'ELAK', 'ELPI', 'EQUO', 'ERC', 'ESCAÑOSENBLANCO', 'EU', 'EXISTE', 'EXTREMEÑOS', 'FAC', 'FEJONS', 'FNC', 'FO', 'FORO', 'FUTURO', 'GLG', 'I.Fem', 'IE', 'IF', 'IGRE', 'IU', 'IZQESP', 'IZQP', 'JUEX', 'JXCAT', 'LFV', 'MIEL', 'PACMA', 'PCPE', 'PCTE', 'PCTG', 'PFAC', 'PH', 'PIRATES', 'PMR', 'PNACIONAL', 'PNV', 'PP', 'PSOE', 'RECORTES CERO-GV', 'RECORTES0', 'SAE', 'SAF', 'SAIn', 'SUMAR', 'THELEFT', 'UNIDOSSI', 'UP', 'UPyD', 'VOLT'],
         partyColors: window._partyColors,
       });
       mapLoaded = true;
@@ -107,7 +111,8 @@
     setTimeout(() => {
       if (!mapLoaded) loadMap();
     }, 4000);
-    
+
   </script>
 </body>
+
 </html>
